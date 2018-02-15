@@ -33,6 +33,8 @@
 
 """Common utility classes/functions."""
 
+from __future__ import absolute_import, print_function, division
+from six.moves import range
 
 import os
 import sys
@@ -63,12 +65,12 @@ class cached_property(object):
         return result
 
 
-def as_tuple(item, type=None, length=None, allow_none=False):
+def as_tuple(item, type=None, length=None):
     # Empty list if we get passed None
     if item is None:
         t = ()
     else:
-        # Convert iterable to tuple...
+        # Convert iterable to list...
         try:
             t = tuple(item)
         # ... or create a list of a single item
@@ -77,13 +79,8 @@ def as_tuple(item, type=None, length=None, allow_none=False):
     if configuration["type_check"]:
         if length and not len(t) == length:
             raise ValueError("Tuple needs to be of length %d" % length)
-        if type is not None:
-            if allow_none:
-                valid = all((isinstance(i, type) or i is None) for i in t)
-            else:
-                valid = all(isinstance(i, type) for i in t)
-            if not valid:
-                raise TypeError("Items need to be of type %s" % type)
+        if type and not all(isinstance(i, type) for i in t):
+            raise TypeError("Items need to be of type %s" % type)
     return t
 
 
@@ -276,6 +273,15 @@ def parser(description=None, group=False):
                    'set pyop2 logging level (default=WARN)')
 
     return parser
+
+
+def maybe_setflags(array, write=None, align=None, uic=None):
+    """Set flags on a numpy ary.
+
+    But don't try to set the write flag if the data aren't owned by this array.
+    See `numpy.ndarray.setflags` for details of the parameters."""
+    write = write if array.flags['OWNDATA'] else None
+    array.setflags(write=write, align=align, uic=uic)
 
 
 def parse_args(*args, **kwargs):

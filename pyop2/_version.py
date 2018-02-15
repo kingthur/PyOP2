@@ -9,6 +9,7 @@
 # versioneer-0.16 (https://github.com/warner/python-versioneer)
 
 """Git implementation of _version.py."""
+from __future__ import absolute_import, print_function, division
 import errno
 import os
 import re
@@ -22,8 +23,8 @@ def get_keywords():
     # setup.py/versioneer.py will grep for the variable names, so they must
     # each be defined on a line of their own. _version.py will just call
     # get_keywords().
-    git_refnames = "$Format:%d$"
-    git_full = "$Format:%H$"
+    git_refnames = " (tag: Firedrake_20170626.2, tag: Firedrake_20170626.0)"
+    git_full = "200780cbe33d3415075774234a134a7e42cd6db3"
     keywords = {"refnames": git_refnames, "full": git_full}
     return keywords
 
