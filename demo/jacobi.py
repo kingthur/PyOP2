@@ -64,6 +64,7 @@
 Port of the Jacobi demo from OP2-Common.
 """
 
+from __future__ import print_function
 from pyop2 import op2, utils
 import numpy as np
 from math import sqrt
